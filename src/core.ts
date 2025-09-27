@@ -8,7 +8,7 @@ export interface Store<T> {
 
 export type Middleware<T> = (store: Store<T>, changed: Partial<T>, next: (changed: Partial<T>) => void,) => void;
 
-export function createStore<T extends object>(initialState: T, middlewares: Middleware<T>[]) {
+export function createStore<T extends object>(initialState: T, middlewares: Middleware<T>[] = []) {
     let state = { ...initialState };
     const listeners = new Set<Listener<T>>();
 

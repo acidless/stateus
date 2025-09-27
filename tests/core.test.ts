@@ -1,5 +1,5 @@
 import {describe, expect, test} from '@jest/globals';
-import {createStore} from "../src";
+import {createStore, Middleware} from "../src";
 
 describe("createStore", () => {
     it("should create store with the given initial state", () => {
@@ -69,5 +69,16 @@ describe("createStore", () => {
 
         expect(store.getState()).not.toBe(prevState);
         expect(store.getState()).toEqual({ counter: 10 });
+    });
+
+    it("should call middleware first", () => {
+        const middleware: Middleware<any> = jest.fn((store, changed, next) => {
+            next(changed);
+        });
+
+        const store = createStore({ counter: 10, name: "John" }, [middleware]);
+        store.setState({ counter: store.getState().counter + 1 });
+
+        expect(middleware).toHaveBeenCalledWith(store, {counter: 11}, expect.any(Function));
     });
 });
