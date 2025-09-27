@@ -5,17 +5,34 @@
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
+    "test": "jest",
+    "coverage": "jest --coverage",
     "build": "tsup src/index.ts --format esm,cjs --dts",
     "prepublishOnly": "npm run build"
   },
-  "keywords": ["react", "state", "store", "hooks"],
+  "keywords": [
+    "react",
+    "state",
+    "store",
+    "hooks"
+  ],
   "author": "Oleg Kukunov <odkukunov@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "typescript": "^5.0.0",
-    "tsup": "^7.0.0"
+    "@testing-library/jest-dom": "^6.8.0",
+    "@testing-library/react": "^16.3.0",
+    "@types/jest": "^30.0.0",
+    "@types/react": "^19.1.14",
+    "jest": "^30.1.3",
+    "jest-environment-jsdom": "^30.1.2",
+    "ts-jest": "^29.4.4",
+    "ts-node": "^10.9.2",
+    "tsup": "^7.0.0",
+    "typescript": "^5.0.0"
   },
   "peerDependencies": {
     "react": ">=16.8"
