@@ -1,14 +1,18 @@
 {
-  "name": "stateus",
+  "name": "stateusjs",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "A tiny state management library with React support",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
   "scripts": {
-    "build": "tsup src/index.ts --format esm,cjs --dts"
+    "build": "tsup src/index.ts --format esm,cjs --dts",
+    "prepublishOnly": "npm run build"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "keywords": ["react", "state", "store", "hooks"],
+  "author": "Oleg Kukunov <odkukunov@gmail.com>",
+  "license": "MIT",
   "devDependencies": {
     "typescript": "^5.0.0",
     "tsup": "^7.0.0"
