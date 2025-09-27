@@ -1,0 +1,29 @@
+{
+  "name": "stateus",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "tsup": "^7.0.0"
+  },
+  "peerDependencies": {
+    "react": ">=16.8"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.cjs"
+    },
+    "./react": {
+      "import": "./dist/react/index.esm.js",
+      "require": "./dist/react/index.cjs"
+    }
+  }
+}
