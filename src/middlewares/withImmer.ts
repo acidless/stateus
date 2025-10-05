@@ -1,7 +1,6 @@
 import {Middleware} from "../core";
 
 let produce: any;
-
 try {
     produce = require("immer").produce;
 } catch {
@@ -10,7 +9,7 @@ try {
     );
 }
 
-export const withImmer: Middleware<any> = (store, changed, next) => {
+export const withImmer: Middleware = (store, changed, next) => {
     if (typeof changed === "function") {
         next(produce(store.getState(), changed));
     } else {

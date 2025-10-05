@@ -56,9 +56,7 @@ store.setState({ count: store.getState().count + 1 });
   - `useStore(selector)` — React hook to select a part of the state (only in stateus/react).
 
 ## 🔹Roadmap
-- Middleware (logging, DevTools).
-- Async actions support.
-- Selective subscriptions by key.
+
 
 ## 🔹Contribution
 Contributions are welcome! 🙌

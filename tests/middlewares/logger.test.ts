@@ -6,7 +6,7 @@ describe("Logger Middleware", () => {
     it("should log state", () => {
         const consoleLog = jest.spyOn(console, "log");
 
-        const store = createStore({counter: 0}, [logger]);
+        const store = createStore({counter: 0}, {middlewares: [logger]});
         store.setState({counter: 1});
 
         expect(consoleLog.mock.calls[0]).toEqual(["Prev State: ", {counter: 0}]);

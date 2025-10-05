@@ -1,7 +1,16 @@
-import {describe, expect, test} from '@jest/globals';
+import {describe, expect} from '@jest/globals';
 import {createStore, Middleware} from "../src";
+import {withThunk} from "../src/middlewares/withThunk";
+
+jest.mock("../src/middlewares/withThunk", () => ({
+    withThunk: jest.fn((store, changed, next) => next(changed)),
+}));
 
 describe("createStore", () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+    })
+
     it("should create store with the given initial state", () => {
         const store = createStore({counter: 10});
         expect(store.getState()).toEqual({counter: 10});
@@ -76,9 +85,16 @@ describe("createStore", () => {
             next(changed);
         });
 
-        const store = createStore({ counter: 10, name: "John" }, [middleware]);
+        const store = createStore({ counter: 10, name: "John" }, {middlewares: [middleware]});
         store.setState({ counter: store.getState().counter + 1 });
 
         expect(middleware).toHaveBeenCalledWith(store, {counter: 11}, expect.any(Function));
+    });
+
+    it("shouldn't call any of default middlewares", () => {
+        const store = createStore({ counter: 10, name: "John" }, {middlewares: []});
+        store.setState({ counter: store.getState().counter + 1 });
+
+        expect(withThunk).not.toHaveBeenCalled();
     });
 });

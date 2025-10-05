@@ -1,3 +1,6 @@
+import {withImmer} from "./middlewares/withImmer";
+import {withThunk} from "./middlewares/withThunk";
+
 type Listener<T> = (state: T) => void;
 
 export interface Store<T> {
@@ -6,14 +9,22 @@ export interface Store<T> {
     subscribe: (listener: Listener<T>) => () => void;
 }
 
-export type Middleware<T> = (store: Store<T>, changed: Partial<T>, next: (changed: Partial<T>) => void,) => void;
+export type Middleware<T = unknown> = (
+    store: Store<T>,
+    changed: Partial<T> | ((store: Store<T>) => unknown),
+    next: (partial: Partial<T>) => void
+) => void;
 
-export function createStore<T extends object>(initialState: T, middlewares: Middleware<T>[] = []) {
-    let state = { ...initialState };
+export const defaultMiddlewares = [withThunk, withImmer];
+
+export function createStore<T extends object>(initialState: T, options?: { middlewares?: Middleware[] }) {
+    const middlewares = options?.middlewares ?? defaultMiddlewares;
+
+    let state = {...initialState};
     const listeners = new Set<Listener<T>>();
 
     const coreSetState = (changed: Partial<T>) => {
-        state = { ...state, ...changed };
+        state = {...state, ...changed};
         listeners.forEach((l) => l(state));
     };
 
@@ -22,7 +33,6 @@ export function createStore<T extends object>(initialState: T, middlewares: Midd
 
         setState: (changed: Partial<T>) => {
             if (middlewares.length > 0) {
-
                 const run = (index: number, changed: Partial<T>) => {
                     if (index < middlewares.length) {
                         middlewares[index](store, changed, (nextP) => run(index + 1, nextP));
