@@ -1,4 +1,5 @@
-import {withImmer} from "../../src/middlewares/withImmer";
+import {withImmer} from "../../src/middlewares";
+import {Middleware, Store} from "../../src";
 
 jest.mock("immer", () => ({
     produce: jest.fn((state, fn) => {
@@ -43,12 +44,22 @@ describe("withImmer middleware", () => {
 describe("withImmer middleware without immer", () => {
     it("should throw error if immer is not installed", () => {
         jest.resetModules();
+
         jest.doMock("immer", () => {
             throw new Error("Module not found");
         });
 
-        expect(() => require("../../src/middlewares/withImmer")).toThrow(
-            "Please install immer it to use withImmer middleware. User npm install immer"
-        );
+        const { withImmer } = require("../../src/middlewares/withImmer") as {
+            withImmer: Middleware;
+        };
+
+        const store: Store<any> = {
+            getState: () => ({ count: 0 }),
+            setState: () => {},
+            subscribe: () => () => {}
+        };
+
+        expect(() => withImmer(store, (state) => ({ ...state, count: 1 }), () => {}))
+            .toThrow("Please install immer it to use withImmer middleware. User npm install immer");
     });
 });

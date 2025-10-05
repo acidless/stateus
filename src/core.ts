@@ -1,4 +1,3 @@
-import {withImmer} from "./middlewares/withImmer";
 import {withThunk} from "./middlewares/withThunk";
 
 type Listener<T> = (state: T) => void;
@@ -15,7 +14,7 @@ export type Middleware<T = unknown> = (
     next: (partial: Partial<T>) => void
 ) => void;
 
-export const defaultMiddlewares = [withThunk, withImmer];
+export const defaultMiddlewares = [withThunk];
 
 export function createStore<T extends object>(initialState: T, options?: { middlewares?: Middleware[] }) {
     const middlewares = options?.middlewares ?? defaultMiddlewares;
