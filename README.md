@@ -47,7 +47,7 @@ store.setState({ count: store.getState().count + 1 });
 ```
 
 ## 🔹API
-`createStore(initialState)` - Creates a new store.
+`createStore(initialState, options)` - Creates a new store.
 
 **Methods**
   - `getState()` — returns the current state.
@@ -55,8 +55,48 @@ store.setState({ count: store.getState().count + 1 });
   - `subscribe(listener)` — subscribes to state changes; returns an unsubscribe function.
   - `useStore(selector)` — React hook to select a part of the state (only in stateus/react).
 
-## 🔹Roadmap
+## 🔹Middlewares
+Stateus supports middleware functions to extend the behavior of setState.
+Middleware allows you to intercept state updates, modify them, or perform side effects.
 
+**Middleware signature:**
+```typescript
+type Middleware<T> = (
+  store: Store<T>,
+  changed: Partial<T> | ((store: Store<T>) => unknown),
+  next: (partial: Partial<T>) => void
+) => void;
+```
+**Parameters:**
+- `store` — the store instance (getState, setState, subscribe available).
+- `changed` — the state update (object or function).
+- `next` — call this to pass the change to the next middleware or to update state.
+
+### Default Middlewares
+`withThunk` — allows setState to accept functions for async logic or computed updates:
+```typescript
+store.setState(async (store) => {
+  store.setState({ loading: true });
+  const result = await fetchData();
+  store.setState({ data: result, loading: false });
+});
+```
+
+`withImmer` — allows using Immer drafts for immutable updates:
+```typescript
+store.setState((draft) => {
+  draft.count += 1;
+});
+```
+
+### Custom middlewares
+You can provide your own middleware array when creating the store:
+```typescript
+const store = createStore(
+  { count: 0 },
+  { middlewares: [customMiddleware, withThunk] }
+);
+```
 
 ## 🔹Contribution
 Contributions are welcome! 🙌
